@@ -1,0 +1,14 @@
+{
+  "buildCommand": "npm ci --legacy-peer-deps && NODE_ENV=production npm run build",
+  "framework": "nextjs",
+  "images": {
+    "sizes": [640, 750, 828, 1080, 1200, 1920],
+    "domains": ["localhost"],
+    "remotePatterns": [
+      {
+        "protocol": "https",
+        "hostname": "**"
+      }
+    ]
+  }
+}
