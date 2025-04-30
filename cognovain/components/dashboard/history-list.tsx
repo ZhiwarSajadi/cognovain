@@ -1,8 +1,12 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { ChevronDown, ChevronUp, Calendar, Clock, FileText } from "lucide-react";
+import { ChevronDown, ChevronUp, Calendar, Clock, FileText, TagIcon, Share2, Twitter, Facebook, Linkedin, Copy, CheckCircle2 } from "lucide-react";
+import { extractCognitiveBiases, generateShareableSummary } from "@/utils/analysis-helpers";
+import { trackEvent } from "@/lib/analytics";
+import { Button } from "@/components/ui/button";
+
 import Link from "next/link";
 
 interface HistoryEntry {
@@ -16,8 +20,35 @@ interface HistoryListProps {
   history: HistoryEntry[];
 }
 
+interface BiasesMap {
+  [key: string]: string[];
+}
+
+interface ShareStateMap {
+  [key: string]: boolean;
+}
+
+interface CopiedStateMap {
+  [key: string]: boolean;
+}
+
 export default function HistoryList({ history }: HistoryListProps) {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [biasesMap, setBiasesMap] = useState<BiasesMap>({});
+  const [shareOptionsMap, setShareOptionsMap] = useState<ShareStateMap>({});
+  const [copiedMap, setCopiedMap] = useState<CopiedStateMap>({});
+  
+  // Extract biases from analysis text when component mounts or history changes
+  useEffect(() => {
+    const newBiasesMap: BiasesMap = {};
+    
+    history.forEach(entry => {
+      const biases = extractCognitiveBiases(entry.analysis);
+      newBiasesMap[entry.id] = biases;
+    });
+    
+    setBiasesMap(newBiasesMap);
+  }, [history]);
 
   // Toggle expanded state for an item
   const toggleExpand = (id: string) => {
@@ -26,6 +57,50 @@ export default function HistoryList({ history }: HistoryListProps) {
     } else {
       setExpandedItem(id);
     }
+  };
+
+  // Toggle share options visibility
+  const toggleShareOptions = (id: string, event?: React.MouseEvent) => {
+    if (event) {
+      event.stopPropagation();
+    }
+    setShareOptionsMap(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  // Handle copy to clipboard with visual feedback
+  const handleCopy = (entry: HistoryEntry, event?: React.MouseEvent) => {
+    if (event) {
+      event.stopPropagation();
+    }
+    navigator.clipboard.writeText(`Analysis of: "${entry.statement}"
+
+${entry.analysis}`);
+    
+    // Update copied state for this entry
+    setCopiedMap(prev => ({
+      ...prev,
+      [entry.id]: true
+    }));
+    
+    // Reset copied state after 2 seconds
+    setTimeout(() => {
+      setCopiedMap(prev => ({
+        ...prev,
+        [entry.id]: false
+      }));
+    }, 2000);
+    
+    // Show notification
+    const notificationEvent = new CustomEvent('notification', { 
+      detail: { message: 'Analysis copied to clipboard', type: 'success' } 
+    });
+    window.dispatchEvent(notificationEvent);
+    
+    // Track copy event
+    trackEvent('copy', 'user_action', 'history_analysis');
   };
 
   // Function to highlight cognitive bias terms in text
@@ -97,6 +172,12 @@ export default function HistoryList({ history }: HistoryListProps) {
                       <Clock className="h-4 w-4 mr-1" />
                       {formatDistanceToNow(new Date(entry.createdAt), { addSuffix: true })}
                     </span>
+                    {biasesMap[entryId] && biasesMap[entryId].length > 0 && (
+                      <span className="flex items-center">
+                        <TagIcon className="h-4 w-4 mr-1" />
+                        {biasesMap[entryId].length} pattern{biasesMap[entryId].length !== 1 ? 's' : ''} detected
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded-full">
@@ -117,6 +198,29 @@ export default function HistoryList({ history }: HistoryListProps) {
                     </div>
                     <p className="text-gray-700 dark:text-gray-300 italic border-l-4 border-gray-200 dark:border-gray-600 pl-3 py-1">"{entry.statement}"</p>
                   </div>
+                  {/* Detected biases/patterns */}
+                  {biasesMap[entryId] && biasesMap[entryId].length > 0 && (
+                    <div className="mb-4 flex flex-wrap gap-2 items-center">
+                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400 flex items-center">
+                        <TagIcon className="h-3.5 w-3.5 mr-1" />
+                        Detected patterns:
+                      </span>
+                      {biasesMap[entryId].slice(0, 5).map((bias, idx) => (
+                        <span 
+                          key={idx}
+                          className="px-2 py-1 text-xs font-medium rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800"
+                        >
+                          {bias.replace(/^\w/, c => c.toUpperCase())}
+                        </span>
+                      ))}
+                      {biasesMap[entryId].length > 5 && (
+                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+                          +{biasesMap[entryId].length - 5} more
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  
                   <div>
                     <div className="flex items-center gap-2 mb-3">
                       <div className="w-1 h-5 bg-gradient-to-b from-rose-500 to-slate-900 rounded-full shadow-sm"></div>
@@ -126,24 +230,96 @@ export default function HistoryList({ history }: HistoryListProps) {
                       {highlightCognitiveBiases(entry.analysis)}
                     </div>
                     
-                    <div className="flex justify-end mt-6">
-                      <button 
-                        onClick={() => {
-                          navigator.clipboard.writeText(`Analysis of: "${entry.statement}"\n\n${entry.analysis}`);
-                          // Show a copy notification if available
-                          const event = new CustomEvent('notification', { 
-                            detail: { message: 'Analysis copied to clipboard', type: 'success' } 
-                          });
-                          window.dispatchEvent(event);
-                        }}
-                        className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
+                    <div className="flex justify-end items-center gap-3 mt-6">
+                      {/* Share button and options */}
+                      <div className="relative">
+                        <Button
+                          onClick={(e) => toggleShareOptions(entry.id, e)}
+                          variant="outline"
+                          size="sm"
+                          className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-300"
+                          aria-label="Share analysis"
+                          aria-expanded={shareOptionsMap[entry.id] || false}
+                          aria-controls={`share-options-${entry.id}`}
+                        >
+                          <Share2 className="h-4 w-4 mr-1" />
+                          Share
+                        </Button>
+                        
+                        {/* Share options popup */}
+                        {shareOptionsMap[entry.id] && (
+                          <div 
+                            id={`share-options-${entry.id}`}
+                            className="absolute right-0 top-full mt-2 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 min-w-[200px] animate-fade-in"
+                            style={{ minWidth: '200px' }}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Share via:</p>
+                            <div className="grid grid-cols-1 gap-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  const biases = biasesMap[entry.id] || [];
+                                  const summary = generateShareableSummary(entry.statement, biases);
+                                  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(summary || `I analyzed my thinking with Cognovain and identified my cognitive biases! Check out this tool to improve your thinking: https://cognovain.vercel.app`)}`);
+                                  trackEvent('share', 'social', 'twitter');
+                                }}
+                                className="w-full justify-start text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
+                              >
+                                <Twitter className="h-4 w-4 mr-2" />
+                                Twitter
+                              </Button>
+                              
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://cognovain.vercel.app')}`);
+                                  trackEvent('share', 'social', 'facebook');
+                                }}
+                                className="w-full justify-start text-gray-700 dark:text-gray-300 hover:text-blue-800 dark:hover:text-blue-600"
+                              >
+                                <Facebook className="h-4 w-4 mr-2" />
+                                Facebook
+                              </Button>
+                              
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://cognovain.vercel.app')}`);
+                                  trackEvent('share', 'social', 'linkedin');
+                                }}
+                                className="w-full justify-start text-gray-700 dark:text-gray-300 hover:text-blue-700 dark:hover:text-blue-500"
+                              >
+                                <Linkedin className="h-4 w-4 mr-2" />
+                                LinkedIn
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Copy button */}
+                      <Button 
+                        onClick={(e) => handleCopy(entry, e)}
+                        variant="outline"
+                        size="sm"
+                        className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-300"
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                        </svg>
-                        Copy
-                      </button>
+                        {copiedMap[entry.id] ? (
+                          <>
+                            <CheckCircle2 className="h-4 w-4 mr-1 text-green-500" />
+                            Copied!
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="h-4 w-4 mr-1" />
+                            Copy
+                          </>
+                        )}
+                      </Button>
                     </div>
                   </div>
                 </div>

@@ -1,0 +1,9 @@
+# Allow all web crawlers
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://cognovain.vercel.app/sitemap.xml
+
+# Disallow access to API routes
+Disallow: /api/
