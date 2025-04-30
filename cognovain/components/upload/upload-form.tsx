@@ -112,22 +112,25 @@ export default function UploadForm() {
            
            {/* Result state */}
            {analysisResult && !isAnalyzing && (
-             <div className="mt-6 p-4 sm:p-6 w-full border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-black shadow-sm">
-               <div className="flex items-center gap-2 mb-4">
-                 <div className="w-2 h-8 bg-gradient-to-b from-rose-500 to-slate-900 rounded-full"></div>
-                 <h3 className="text-xl font-semibold dark:text-white">Analysis Result</h3>
+             <div className="mt-6 p-4 sm:p-6 w-full border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-black shadow-lg overflow-auto max-h-[1000px] min-h-[400px] h-auto transition-all duration-300 ease-in-out">
+               <div className="flex items-center gap-3 mb-5">
+                 <div className="w-2 h-10 bg-gradient-to-b from-rose-500 to-slate-900 rounded-full shadow-md"></div>
+                 <h3 className="text-xl font-semibold dark:text-white bg-gradient-to-r from-rose-700 to-slate-900 bg-clip-text text-transparent">Analysis Result</h3>
                </div>
                
-               <div className="bg-gray-50 dark:bg-gray-900 p-4 sm:p-5 rounded-lg border border-gray-100 dark:border-gray-800 mb-6">
-                 <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Original Statement</h4>
-                 <p className="text-gray-700 dark:text-gray-300 italic text-sm sm:text-base border-l-4 border-gray-300 dark:border-gray-700 pl-3 py-1">"{userStatement}"</p>
+               <div className="bg-gray-50 dark:bg-gray-900 p-4 sm:p-5 rounded-lg border border-gray-100 dark:border-gray-800 mb-6 shadow-inner">
+                 <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 flex items-center gap-2">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                   Original Statement
+                 </h4>
+                 <p className="text-gray-700 dark:text-gray-300 italic text-sm sm:text-base border-l-4 border-rose-300 dark:border-rose-700 pl-3 py-1 bg-rose-50/50 dark:bg-rose-950/20 rounded-r-sm">"{userStatement}"</p>
                </div>
                
-               <div className="prose max-w-none dark:prose-invert">
+               <div className="prose max-w-none dark:prose-invert w-full overflow-x-auto bg-white dark:bg-gray-950 p-4 rounded-lg border border-gray-100 dark:border-gray-800 shadow-inner">
                  {analysisResult.split('\n').map((paragraph, index) => {
-                   // Highlight cognitive bias mentions with dark mode support
+                   // Enhanced highlighting for cognitive biases with more patterns
                    const highlightedText = paragraph.replace(
-                     /(cognitive bias|logical fallacy|thinking error|cognitive distortion|black and white thinking|catastrophizing|overgeneralization|personalization|emotional reasoning|mental filter|jumping to conclusions|should statements|labeling|magnification|minimization|fortune telling|mind reading|disqualifying the positive|all-or-nothing thinking|filtering|polarized thinking|heaven's reward fallacy|control fallacy|fallacy of fairness|blaming|always being right|fallacy of change|global labeling|mislabeling|fallacy of attachment)/gi,
+                     /(cognitive bias|logical fallacy|thinking error|cognitive distortion|black and white thinking|catastrophizing|overgeneralization|personalization|emotional reasoning|mental filter|jumping to conclusions|should statements|labeling|magnification|minimization|fortune telling|mind reading|disqualifying the positive|all-or-nothing thinking|filtering|polarized thinking|heaven's reward fallacy|control fallacy|fallacy of fairness|blaming|always being right|fallacy of change|global labeling|mislabeling|fallacy of attachment|discounting the positive|dichotomous thinking|arbitrary inference|selective abstraction|over-generalization|maximization|minimization|confirmation bias|hindsight bias|self-serving bias|attribution bias|framing effect|anchoring bias|availability heuristic|halo effect|fundamental attribution error|optimism bias|pessimism bias|dunning-kruger effect|actor-observer bias|sunk cost fallacy|false consensus effect|bandwagon effect|self-fulfilling prophecy|negativity bias|positive bias|recency bias|just world hypothesis|spotlight effect|gambler's fallacy|illusory correlation|projection bias|normalcy bias|reactance|regret aversion|status quo bias|outcome bias|moral luck|appeal to authority|appeal to emotion|appeal to ignorance|appeal to nature|appeal to novelty|appeal to tradition|appeal to hypocrisy|straw man fallacy|circular reasoning|ad hominem|slippery slope|false dilemma|hasty generalization|appeal to probability|appeal to force|bandwagon fallacy|no true scotsman|loaded question|ambiguity|perfect solution fallacy|thought-action fusion|emotional reasoning|compare and despair|cross-examination|excessive apologizing|overvaluing social approval|perfectionism)/gi,
                      '<span class="font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950 px-1 rounded">$1</span>'
                    );
                    
