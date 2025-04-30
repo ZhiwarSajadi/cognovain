@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { ChevronDown, ChevronUp, Calendar, Clock, FileText, TagIcon, Share2, Twitter, Facebook, Linkedin, Copy, CheckCircle2 } from "lucide-react";
-import { extractCognitiveBiases, generateShareableSummary } from "@/utils/analysis-helpers";
+import { ChevronDown, ChevronUp, Calendar, Clock, FileText, TagIcon, Copy, CheckCircle2 } from "lucide-react";
+import { extractCognitiveBiases } from "@/utils/analysis-helpers";
 import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 
@@ -24,10 +24,6 @@ interface BiasesMap {
   [key: string]: string[];
 }
 
-interface ShareStateMap {
-  [key: string]: boolean;
-}
-
 interface CopiedStateMap {
   [key: string]: boolean;
 }
@@ -35,7 +31,6 @@ interface CopiedStateMap {
 export default function HistoryList({ history }: HistoryListProps) {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [biasesMap, setBiasesMap] = useState<BiasesMap>({});
-  const [shareOptionsMap, setShareOptionsMap] = useState<ShareStateMap>({});
   const [copiedMap, setCopiedMap] = useState<CopiedStateMap>({});
   
   // Extract biases from analysis text when component mounts or history changes
@@ -57,17 +52,6 @@ export default function HistoryList({ history }: HistoryListProps) {
     } else {
       setExpandedItem(id);
     }
-  };
-
-  // Toggle share options visibility
-  const toggleShareOptions = (id: string, event?: React.MouseEvent) => {
-    if (event) {
-      event.stopPropagation();
-    }
-    setShareOptionsMap(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
   };
 
   // Handle copy to clipboard with visual feedback
@@ -230,77 +214,7 @@ ${entry.analysis}`);
                       {highlightCognitiveBiases(entry.analysis)}
                     </div>
                     
-                    <div className="flex justify-end items-center gap-3 mt-6">
-                      {/* Share button and options */}
-                      <div className="relative">
-                        <Button
-                          onClick={(e) => toggleShareOptions(entry.id, e)}
-                          variant="outline"
-                          size="sm"
-                          className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-300"
-                          aria-label="Share analysis"
-                          aria-expanded={shareOptionsMap[entry.id] || false}
-                          aria-controls={`share-options-${entry.id}`}
-                        >
-                          <Share2 className="h-4 w-4 mr-1" />
-                          Share
-                        </Button>
-                        
-                        {/* Share options popup */}
-                        {shareOptionsMap[entry.id] && (
-                          <div 
-                            id={`share-options-${entry.id}`}
-                            className="absolute right-0 top-full mt-2 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 min-w-[200px] animate-fade-in"
-                            style={{ minWidth: '200px' }}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Share via:</p>
-                            <div className="grid grid-cols-1 gap-2">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => {
-                                  const biases = biasesMap[entry.id] || [];
-                                  const summary = generateShareableSummary(entry.statement, biases);
-                                  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(summary || `I analyzed my thinking with Cognovain and identified my cognitive biases! Check out this tool to improve your thinking: https://cognovain.vercel.app`)}`);
-                                  trackEvent('share', 'social', 'twitter');
-                                }}
-                                className="w-full justify-start text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
-                              >
-                                <Twitter className="h-4 w-4 mr-2" />
-                                Twitter
-                              </Button>
-                              
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => {
-                                  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://cognovain.vercel.app')}`);
-                                  trackEvent('share', 'social', 'facebook');
-                                }}
-                                className="w-full justify-start text-gray-700 dark:text-gray-300 hover:text-blue-800 dark:hover:text-blue-600"
-                              >
-                                <Facebook className="h-4 w-4 mr-2" />
-                                Facebook
-                              </Button>
-                              
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => {
-                                  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://cognovain.vercel.app')}`);
-                                  trackEvent('share', 'social', 'linkedin');
-                                }}
-                                className="w-full justify-start text-gray-700 dark:text-gray-300 hover:text-blue-700 dark:hover:text-blue-500"
-                              >
-                                <Linkedin className="h-4 w-4 mr-2" />
-                                LinkedIn
-                              </Button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                      
+                    <div className="flex justify-end items-center mt-6">
                       {/* Copy button */}
                       <Button 
                         onClick={(e) => handleCopy(entry, e)}
