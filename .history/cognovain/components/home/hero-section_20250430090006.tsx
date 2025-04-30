@@ -17,15 +17,15 @@ export default function HeroSection() {
                         </Badge>
                     </div>
                 </div>
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mt-8 sm:mt-12 mb-6 sm:mb-8 text-center max-w-4xl leading-tight px-2">Unveil Your Cognition with Cognovain</h1>
-                <h2 className="text-xl sm:text-2xl text-center text-gray-600 mb-10 sm:mb-16 max-w-2xl px-4">Spot cognitive errors and reframe thinking.</h2>
+                <h1 className="text-6xl lg:text-7xl font-bold mt-12 mb-8 text-center max-w-4xl leading-tight">Unveil Your Cognition with Cognovain</h1>
+                <h2 className="text-2xl text-center text-gray-600 mb-16 max-w-2xl">Spot cognitive errors and reframe thinking.</h2>
                 <Button
                     variant={'link'}
-                    className="text-white text-base sm:text-lg md:text-xl rounded-full px-6 sm:px-8 md:px-10 py-3 sm:py-4 bg-gradient-to-r from-slate-900 to-rose-500 hover:from-rose-500 hover:to-slate-900 hover:no-underline font-medium shadow-lg transition-all duration-300 border-2 border-rose-300 dark:border-rose-700 hover:border-rose-400 dark:hover:border-rose-600 hover:shadow-rose-200/30 dark:hover:shadow-rose-700/20 hover:scale-105 transform-gpu"
+                    className="text-white text-xl rounded-full px-10 py-4 bg-gradient-to-r from-slate-900 to-rose-500 hover:from-rose-500 hover:to-slate-900 hover:no-underline font-medium shadow-lg transition-all duration-300 border-2 border-rose-300 dark:border-rose-700 hover:border-rose-400 dark:hover:border-rose-600 hover:shadow-rose-200/30 dark:hover:shadow-rose-700/20 hover:scale-105 transform-gpu"
                 >
-                    <Link href="/#plans" className="flex gap-2 sm:gap-3 items-center">
+                    <Link href="/#plans" className="flex gap-3 items-center">
                         <span>Try Cognovain</span>
-                        <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 animate-pulse" />
+                        <ArrowRight className="w-6 h-6 animate-pulse" />
                     </Link>
                 </Button>
             </div>

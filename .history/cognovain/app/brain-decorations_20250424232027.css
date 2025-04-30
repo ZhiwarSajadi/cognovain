@@ -6,10 +6,9 @@
   transition: transform 0.5s ease, opacity 0.3s ease; /* Smooth transition for hover effects */
   /* Opacity is now set individually for each brain based on vertical position */
   filter: var(--brain-filter, none); /* Filter for dark mode */
-  max-width: 30vw; /* Limit size on small screens */
 }
 
-/* Blue brain variations - positioned to fit within viewport */
+/* Blue brain variations - positioned to fit within 1377x674 viewport */
 .blue-brain-1 {
   top: 5%;
   right: 2%;
@@ -48,30 +47,6 @@
   width: 180px;
   transform: rotate(-60deg);
   opacity: 0.2; /* Lower opacity near bottom */
-}
-
-/* Responsive adjustments for mobile */
-@media (max-width: 768px) {
-  .brain-decoration {
-    max-width: 25vw;
-    opacity: 0.2 !important; /* Reduce opacity on mobile */
-  }
-  
-  .blue-brain-1, .colorful-brain-1 {
-    top: 10%;
-    width: 120px;
-  }
-  
-  .blue-brain-2, .colorful-brain-2 {
-    bottom: 20%;
-    width: 100px;
-  }
-  
-  .blue-brain-3, .colorful-brain-3,
-  .blue-brain-4, .colorful-brain-4,
-  .blue-brain-5, .colorful-brain-5 {
-    width: 90px;
-  }
 }
 
 /* Colorful brain variations - positioned to fit within 1377x674 viewport */

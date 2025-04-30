@@ -135,9 +135,9 @@ export default function Header() {
           >
             <span className="sr-only">Open main menu</span>
             {mobileMenuOpen ? (
-              <X className="h-5 w-5" aria-hidden="true" />
+              <X className="h-6 w-6" aria-hidden="true" />
             ) : (
-              <Menu className="h-5 w-5" aria-hidden="true" />
+              <Menu className="h-6 w-6" aria-hidden="true" />
             )}
           </button>
         </div>
@@ -145,68 +145,54 @@ export default function Header() {
 
       {/* Mobile menu, show/hide based on menu state */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed top-16 inset-x-0 bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 shadow-lg z-50 max-h-[calc(100vh-4rem)] overflow-y-auto">
-          <div className="space-y-1 px-4 pb-4 pt-2">
+        <div className="md:hidden">
+          <div className="space-y-1 px-4 pb-3 pt-2">
             <NavLink
               href="/#how-it-works"
-              className="block py-2 text-base font-medium rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="block py-2 text-base font-medium"
               onClick={() => setMobileMenuOpen(false)}
             >
               How It Works
             </NavLink>
             <NavLink
               href="/#plans"
-              className="block py-2 text-base font-medium rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="block py-2 text-base font-medium"
               onClick={() => setMobileMenuOpen(false)}
             >
               Plans
             </NavLink>
             <NavLink
               href="/#faq"
-              className="block py-2 text-base font-medium rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="block py-2 text-base font-medium"
               onClick={() => setMobileMenuOpen(false)}
             >
               FAQ
             </NavLink>
-            <div className="pt-2 border-t border-gray-200 dark:border-gray-800 mt-2">
-              <SignedIn>
-                <div className="flex flex-col space-y-2">
-                  <NavLink
-                    href="/submit"
-                    className="w-full px-4 py-2 text-sm font-medium text-center text-white bg-rose-600 rounded-md hover:bg-rose-700 transition-colors flex items-center justify-center gap-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <span>Submit Entry</span>
-                    <ExternalLink className="h-4 w-4" />
-                  </NavLink>
-                  <NavLink
-                    href="/dashboard"
-                    className="w-full px-4 py-2 text-sm font-medium text-center text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Dashboard
-                  </NavLink>
-                </div>
-              </SignedIn>
-              <SignedOut>
-                <div className="flex flex-col space-y-2 mt-2">
-                  <Link 
-                    href="/sign-in"
-                    className="w-full px-4 py-2 text-sm font-medium text-center text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Sign In
-                  </Link>
-                  <Link 
-                    href="/sign-up"
-                    className="w-full px-4 py-2 text-sm font-medium text-center text-white bg-rose-600 rounded-md hover:bg-rose-700 transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
-                </div>
-              </SignedOut>
-            </div>
+            <SignedIn>
+              <NavLink
+                href="/submit"
+                className="block py-2 text-base font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Submit Entry
+              </NavLink>
+              <NavLink
+                href="/dashboard"
+                className="block py-2 text-base font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Dashboard
+              </NavLink>
+            </SignedIn>
+            <SignedOut>
+              <NavLink
+                href="/sign-up"
+                className="block py-2 text-base font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Sign Up
+              </NavLink>
+            </SignedOut>
           </div>
         </div>
       )}

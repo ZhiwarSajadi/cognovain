@@ -135,9 +135,9 @@ export default function Header() {
           >
             <span className="sr-only">Open main menu</span>
             {mobileMenuOpen ? (
-              <X className="h-5 w-5" aria-hidden="true" />
+              <X className="h-6 w-6" aria-hidden="true" />
             ) : (
-              <Menu className="h-5 w-5" aria-hidden="true" />
+              <Menu className="h-6 w-6" aria-hidden="true" />
             )}
           </button>
         </div>

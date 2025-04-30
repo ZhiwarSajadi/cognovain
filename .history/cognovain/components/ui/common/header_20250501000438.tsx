@@ -127,19 +127,8 @@ export default function Header() {
             </div>
           </SignedOut>
 
-          {/* Mobile menu button */}
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            <span className="sr-only">Open main menu</span>
-            {mobileMenuOpen ? (
-              <X className="h-5 w-5" aria-hidden="true" />
-            ) : (
-              <Menu className="h-5 w-5" aria-hidden="true" />
-            )}
-          </button>
+          {/* Mobile menu button - hidden since we have another one */}
+          <span className="md:hidden"></span>
         </div>
       </nav>
 
