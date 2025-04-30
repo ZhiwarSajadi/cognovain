@@ -34,14 +34,14 @@ export default function HistoryList({ history }: HistoryListProps) {
     return text.split('\n').map((paragraph, index) => {
       // Replace cognitive bias terms with highlighted spans
       const highlightedText = paragraph.replace(
-        /(cognitive bias|logical fallacy|thinking error|cognitive distortion|black and white thinking|catastrophizing|overgeneralization|personalization|emotional reasoning|mental filter|jumping to conclusions|should statements|labeling|magnification|minimization)/gi,
-        '<span class="font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-1 rounded">$1</span>'
+        /(cognitive bias|logical fallacy|thinking error|cognitive distortion|black and white thinking|catastrophizing|overgeneralization|personalization|emotional reasoning|mental filter|jumping to conclusions|should statements|labeling|magnification|minimization|fortune telling|mind reading|disqualifying the positive|all-or-nothing thinking|filtering|polarized thinking|heaven's reward fallacy|control fallacy|fallacy of fairness|blaming|always being right|fallacy of change|global labeling|mislabeling|fallacy of attachment|discounting the positive|dichotomous thinking|arbitrary inference|selective abstraction|over-generalization|maximization|minimization|confirmation bias|hindsight bias|self-serving bias|attribution bias|framing effect|anchoring bias|availability heuristic|halo effect|fundamental attribution error|optimism bias|pessimism bias|dunning-kruger effect|actor-observer bias|sunk cost fallacy|false consensus effect|bandwagon effect|self-fulfilling prophecy|negativity bias|positive bias|recency bias|just world hypothesis|spotlight effect|gambler's fallacy|illusory correlation|projection bias|normalcy bias|reactance|regret aversion|status quo bias|outcome bias|moral luck|appeal to authority|appeal to emotion|appeal to ignorance|appeal to nature|appeal to novelty|appeal to tradition|appeal to hypocrisy|straw man fallacy|circular reasoning|ad hominem|slippery slope|false dilemma|hasty generalization|appeal to probability|appeal to force|bandwagon fallacy|no true scotsman|loaded question|ambiguity|perfect solution fallacy|thought-action fusion|emotional reasoning|compare and despair|cross-examination|excessive apologizing|overvaluing social approval|perfectionism|dismissal of positive|rejecting compliments|ignoring achievements|diminishing success|downplaying positives|disregarding strengths|refusal to accept praise|invalidating positive feedback|overlooking positive aspects|trivializing success|underestimating capabilities|refusing to acknowledge progress|denial of improvement|rejection of positive evidence|devaluing personal qualities|negating positive traits|discrediting positive experiences|diminishing personal worth|invalidating positive results|undermining accomplishments|discarding positive feedback|rejecting evidence of success|dismissing positive qualities|minimizing achievements|refusing recognition)/gi,
+        '<span class="font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-1 rounded shadow-sm">$1</span>'
       );
       
       return (
         <div 
           key={index} 
-          className="mb-4 text-gray-700 dark:text-gray-300"
+          className="mb-4 text-gray-700 dark:text-gray-300 transition-all duration-300"
           dangerouslySetInnerHTML={{ __html: highlightedText }}
         />
       );
@@ -78,10 +78,10 @@ export default function HistoryList({ history }: HistoryListProps) {
           return (
             <div
               key={entryId}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transform transition-all duration-200 hover:shadow-md"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transform transition-all duration-300 hover:shadow-md hover:border-rose-200 dark:hover:border-rose-800"
             >
               <div
-                className="p-4 sm:p-5 flex justify-between items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
+                className="p-4 sm:p-5 flex justify-between items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
                 onClick={() => toggleExpand(entryId)}
               >
                 <div className="mr-4 flex-1">
@@ -109,8 +109,8 @@ export default function HistoryList({ history }: HistoryListProps) {
               </div>
 
               {isExpanded && (
-                <div className="border-t border-gray-200 dark:border-gray-700 p-4 sm:p-6">
-                  <div className="mb-6 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg border border-gray-100 dark:border-gray-600">
+                <div className="border-t border-gray-200 dark:border-gray-700 p-4 sm:p-6 animate-fade-in transition-all duration-300">
+                  <div className="mb-6 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg border border-gray-100 dark:border-gray-600 shadow-sm transition-all duration-300">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-1 h-5 bg-rose-500 rounded-full"></div>
                       <h4 className="text-sm font-medium text-gray-500 dark:text-gray-300">Original Statement</h4>
@@ -119,10 +119,10 @@ export default function HistoryList({ history }: HistoryListProps) {
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-3">
-                      <div className="w-1 h-5 bg-gradient-to-b from-rose-500 to-slate-900 rounded-full"></div>
-                      <h4 className="text-sm font-medium text-gray-500 dark:text-gray-300">Analysis</h4>
+                      <div className="w-1 h-5 bg-gradient-to-b from-rose-500 to-slate-900 rounded-full shadow-sm"></div>
+                      <h4 className="text-sm font-medium text-gray-500 dark:text-gray-300 bg-gradient-to-r from-rose-500 to-slate-900 bg-clip-text text-transparent">Analysis</h4>
                     </div>
-                    <div className="prose max-w-none bg-white dark:bg-gray-700 p-4 rounded-lg border border-gray-100 dark:border-gray-600">
+                    <div className="prose max-w-none bg-white dark:bg-gray-700 p-4 rounded-lg border border-gray-100 dark:border-gray-600 shadow-md transition-all duration-300 overflow-auto" style={{ maxHeight: '800px' }}>
                       {highlightCognitiveBiases(entry.analysis)}
                     </div>
                     

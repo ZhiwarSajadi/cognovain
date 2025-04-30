@@ -93,7 +93,7 @@ export default function FaqSection() {
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
-                    <div className="px-6 pb-5 pt-2 text-base text-gray-700 border-t border-gray-100 bg-gray-100 dark:bg-gray-800 dark:text-gray-300 rounded-b-[calc(0.7rem-1px)]">
+                    <div className="px-6 pb-5 pt-2 text-base text-gray-700 border-t border-gray-100 bg-gray-200 dark:bg-gray-700 dark:text-gray-200 rounded-b-[calc(0.7rem-1px)] shadow-inner">
                       <p>{item.answer}</p>
                     </div>
                   </motion.div>

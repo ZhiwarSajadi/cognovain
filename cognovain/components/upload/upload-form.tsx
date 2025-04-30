@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import UploadFormInput from "@/components/upload/upload-form-input";
 import { generateAnalysisFromGemini } from '@/lib/geminiai';
 import { AlertTriangle, Loader2 } from 'lucide-react';
@@ -112,38 +112,35 @@ export default function UploadForm() {
            
            {/* Result state */}
            {analysisResult && !isAnalyzing && (
-             <div className="mt-6 p-4 sm:p-6 w-full border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-black shadow-lg overflow-auto max-h-[1000px] min-h-[400px] h-auto transition-all duration-300 ease-in-out">
+             <div className="mt-6 p-4 sm:p-6 w-full border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-black shadow-lg overflow-auto min-h-[400px] h-auto max-w-full transition-all duration-300 ease-in-out" style={{ maxHeight: '1000px', width: 'calc(100% - 2px)' }}>
                <div className="flex items-center gap-3 mb-5">
                  <div className="w-2 h-10 bg-gradient-to-b from-rose-500 to-slate-900 rounded-full shadow-md"></div>
                  <h3 className="text-xl font-semibold dark:text-white bg-gradient-to-r from-rose-700 to-slate-900 bg-clip-text text-transparent">Analysis Result</h3>
                </div>
-               
-               <div className="bg-gray-50 dark:bg-gray-900 p-4 sm:p-5 rounded-lg border border-gray-100 dark:border-gray-800 mb-6 shadow-inner">
+               <div className="bg-gray-50 dark:bg-gray-900 p-4 sm:p-5 rounded-lg border border-gray-100 dark:border-gray-800 mb-6 shadow-inner animate-fade-in transition-all duration-300">
                  <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 flex items-center gap-2">
                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                    Original Statement
                  </h4>
                  <p className="text-gray-700 dark:text-gray-300 italic text-sm sm:text-base border-l-4 border-rose-300 dark:border-rose-700 pl-3 py-1 bg-rose-50/50 dark:bg-rose-950/20 rounded-r-sm">"{userStatement}"</p>
                </div>
-               
-               <div className="prose max-w-none dark:prose-invert w-full overflow-x-auto bg-gray-100 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-inner">
+               <div className="prose max-w-none dark:prose-invert w-full overflow-x-auto bg-gray-100 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-inner transition-all duration-300">
                  {analysisResult.split('\n').map((paragraph, index) => {
                    // Enhanced highlighting for cognitive biases with more patterns
                    const highlightedText = paragraph.replace(
-                     /(cognitive bias|logical fallacy|thinking error|cognitive distortion|black and white thinking|catastrophizing|overgeneralization|personalization|emotional reasoning|mental filter|jumping to conclusions|should statements|labeling|magnification|minimization|fortune telling|mind reading|disqualifying the positive|all-or-nothing thinking|filtering|polarized thinking|heaven's reward fallacy|control fallacy|fallacy of fairness|blaming|always being right|fallacy of change|global labeling|mislabeling|fallacy of attachment|discounting the positive|dichotomous thinking|arbitrary inference|selective abstraction|over-generalization|maximization|minimization|confirmation bias|hindsight bias|self-serving bias|attribution bias|framing effect|anchoring bias|availability heuristic|halo effect|fundamental attribution error|optimism bias|pessimism bias|dunning-kruger effect|actor-observer bias|sunk cost fallacy|false consensus effect|bandwagon effect|self-fulfilling prophecy|negativity bias|positive bias|recency bias|just world hypothesis|spotlight effect|gambler's fallacy|illusory correlation|projection bias|normalcy bias|reactance|regret aversion|status quo bias|outcome bias|moral luck|appeal to authority|appeal to emotion|appeal to ignorance|appeal to nature|appeal to novelty|appeal to tradition|appeal to hypocrisy|straw man fallacy|circular reasoning|ad hominem|slippery slope|false dilemma|hasty generalization|appeal to probability|appeal to force|bandwagon fallacy|no true scotsman|loaded question|ambiguity|perfect solution fallacy|thought-action fusion|emotional reasoning|compare and despair|cross-examination|excessive apologizing|overvaluing social approval|perfectionism)/gi,
-                     '<span class="font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950 px-1 rounded">$1</span>'
+                     /(cognitive bias|logical fallacy|thinking error|cognitive distortion|black and white thinking|catastrophizing|overgeneralization|personalization|emotional reasoning|mental filter|jumping to conclusions|should statements|labeling|magnification|minimization|fortune telling|mind reading|disqualifying the positive|all-or-nothing thinking|filtering|polarized thinking|heaven's reward fallacy|control fallacy|fallacy of fairness|blaming|always being right|fallacy of change|global labeling|mislabeling|fallacy of attachment|discounting the positive|dichotomous thinking|arbitrary inference|selective abstraction|over-generalization|maximization|minimization|confirmation bias|hindsight bias|self-serving bias|attribution bias|framing effect|anchoring bias|availability heuristic|halo effect|fundamental attribution error|optimism bias|pessimism bias|dunning-kruger effect|actor-observer bias|sunk cost fallacy|false consensus effect|bandwagon effect|self-fulfilling prophecy|negativity bias|positive bias|recency bias|just world hypothesis|spotlight effect|gambler's fallacy|illusory correlation|projection bias|normalcy bias|reactance|regret aversion|status quo bias|outcome bias|moral luck|appeal to authority|appeal to emotion|appeal to ignorance|appeal to nature|appeal to novelty|appeal to tradition|appeal to hypocrisy|straw man fallacy|circular reasoning|ad hominem|slippery slope|false dilemma|hasty generalization|appeal to probability|appeal to force|bandwagon fallacy|no true scotsman|loaded question|ambiguity|perfect solution fallacy|thought-action fusion|emotional reasoning|compare and despair|cross-examination|excessive apologizing|overvaluing social approval|perfectionism|dismissal of positive|rejecting compliments|ignoring achievements|diminishing success|downplaying positives|disregarding strengths|refusal to accept praise|invalidating positive feedback|overlooking positive aspects|trivializing success|underestimating capabilities|refusing to acknowledge progress|denial of improvement|rejection of positive evidence|devaluing personal qualities|negating positive traits|discrediting positive experiences|diminishing personal worth|invalidating positive results|undermining accomplishments|discarding positive feedback|rejecting evidence of success|dismissing positive qualities|minimizing achievements|refusing recognition)/gi,
+                     '<span class="font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950 px-1 rounded shadow-sm">$1</span>'
                    );
                    
                    return (
                      <div 
                        key={index} 
-                       className="mb-4 text-gray-700 dark:text-gray-300 text-sm sm:text-base"
+                       className="mb-4 text-gray-700 dark:text-gray-300 text-sm sm:text-base transition-opacity duration-300 ease-in"
                        dangerouslySetInnerHTML={{ __html: highlightedText }}
                      />
                    );
                  })}
                </div>
-               
                <div className="flex justify-end mt-6 pt-4 border-t border-gray-100 dark:border-gray-800">
                  <button 
                    onClick={() => {
