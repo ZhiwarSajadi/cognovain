@@ -130,9 +130,8 @@ export default function Header() {
           {/* Mobile menu button */}
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground md:hidden z-[101]"
+            className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground md:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-expanded={mobileMenuOpen}
           >
             <span className="sr-only">Open main menu</span>
             {mobileMenuOpen ? (
@@ -145,7 +144,8 @@ export default function Header() {
       </nav>
 
       {/* Mobile menu, show/hide based on menu state */}
-      <div className={`md:hidden fixed top-16 inset-x-0 bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 shadow-lg z-[100] max-h-[calc(100vh-4rem)] overflow-y-auto overflow-x-hidden w-full left-0 right-0 transition-transform duration-200 ease-in-out ${mobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-[-100%] opacity-0 pointer-events-none'}`}>
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed top-16 inset-x-0 bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 shadow-lg z-[100] max-h-[calc(100vh-4rem)] overflow-y-auto overflow-x-hidden w-full left-0 right-0">
           <div className="space-y-1 px-4 pb-4 pt-2">
             <NavLink
               href="/#how-it-works"
@@ -209,6 +209,7 @@ export default function Header() {
             </div>
           </div>
         </div>
+      )}
     </header>
     );
 }
