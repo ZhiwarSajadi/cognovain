@@ -126,7 +126,7 @@ export default function UploadForm() {
                  <p className="text-gray-700 dark:text-gray-300 italic text-sm sm:text-base border-l-4 border-rose-300 dark:border-rose-700 pl-3 py-1 bg-rose-50/50 dark:bg-rose-950/20 rounded-r-sm">"{userStatement}"</p>
                </div>
                
-               <div className="prose max-w-none dark:prose-invert w-full overflow-x-auto bg-white dark:bg-gray-950 p-4 rounded-lg border border-gray-100 dark:border-gray-800 shadow-inner">
+               <div className="prose max-w-none dark:prose-invert w-full overflow-x-auto bg-gray-100 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-inner">
                  {analysisResult.split('\n').map((paragraph, index) => {
                    // Enhanced highlighting for cognitive biases with more patterns
                    const highlightedText = paragraph.replace(

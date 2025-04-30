@@ -21,11 +21,11 @@ export default function HeroSection() {
                 <h2 className="text-2xl text-center text-gray-600 mb-16 max-w-2xl">Spot cognitive errors and reframe thinking.</h2>
                 <Button
                     variant={'link'}
-                    className="text-white text-xl rounded-full px-10 py-4 bg-gradient-to-r from-slate-900 to-rose-500 hover:from-rose-500 hover:to-slate-900 hover:no-underline font-medium shadow-md transition-all duration-300 border-2 border-transparent hover:border-rose-300 dark:hover:border-rose-700"
+                    className="text-white text-xl rounded-full px-10 py-4 bg-gradient-to-r from-slate-900 to-rose-500 hover:from-rose-500 hover:to-slate-900 hover:no-underline font-medium shadow-lg transition-all duration-300 border-2 border-rose-300 dark:border-rose-700 hover:border-rose-400 dark:hover:border-rose-600 hover:shadow-rose-200/30 dark:hover:shadow-rose-700/20 hover:scale-105 transform-gpu"
                 >
                     <Link href="/#plans" className="flex gap-3 items-center">
                         <span>Try Cognovain</span>
-                        <ArrowRight className="w-6 h-6" />
+                        <ArrowRight className="w-6 h-6 animate-pulse" />
                     </Link>
                 </Button>
             </div>
