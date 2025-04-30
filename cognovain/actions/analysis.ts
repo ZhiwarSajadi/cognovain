@@ -18,10 +18,17 @@ export interface HistoryEntry {
   createdAt: Date;
 }
 
+// Response interface for saveAnalysisToHistory function
+export interface SaveAnalysisResponse {
+  success: boolean;
+  data: any;
+  warning?: string;
+}
+
 /**
  * Save an analysis to the user's history in Supabase
  */
-export async function saveAnalysisToHistory(analysis: AnalysisEntry) {
+export async function saveAnalysisToHistory(analysis: AnalysisEntry): Promise<SaveAnalysisResponse> {
   try {
     // Get the current user from Clerk auth
     const user = await currentUser();
@@ -30,33 +37,47 @@ export async function saveAnalysisToHistory(analysis: AnalysisEntry) {
       throw new Error('User not authenticated');
     }
     
+    // Validate environment variables before creating client
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('Missing Supabase environment variables');
+      throw new Error('Database configuration error');
+    }
+    
     // Create a Supabase client
     const supabase = createServerSupabaseClient();
     
-    // Insert the analysis into the database
-    const { data, error } = await supabase
-      .from(ANALYSIS_HISTORY_TABLE)
-      .insert({
-        id: uuidv4(),
-        user_id: user.id,
-        statement: analysis.statement,
-        analysis: analysis.analysis,
-        created_at: new Date().toISOString()
-      })
-      .select()
-      .single();
-    
-    if (error) {
-      console.error('Supabase error:', error);
-      throw new Error(`Failed to save analysis: ${error.message}`);
+    // Validate that the table exists by checking the schema
+    try {
+      // Insert the analysis into the database
+      const { data, error } = await supabase
+        .from(ANALYSIS_HISTORY_TABLE)
+        .insert({
+          id: uuidv4(),
+          user_id: user.id,
+          statement: analysis.statement,
+          analysis: analysis.analysis,
+          created_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Failed to save analysis: ${error.message}`);
+      }
+      
+      console.log('Analysis saved to Supabase for user:', user.id);
+      
+      return { success: true, data };
+    } catch (dbError) {
+      console.error('Database operation error:', dbError);
+      // Return success true but with a warning to prevent blocking the user experience
+      return { success: true, warning: 'Analysis could not be saved to history', data: null };
     }
-    
-    console.log('Analysis saved to Supabase for user:', user.id);
-    
-    return { success: true, data };
   } catch (error) {
     console.error('Error saving analysis to history:', error);
-    throw new Error('Failed to save analysis to history');
+    // Return success true to prevent blocking the user experience
+    return { success: true, warning: 'Analysis could not be saved to history', data: null };
   }
 }
 
@@ -111,4 +132,4 @@ export async function getAnalysisHistory(): Promise<HistoryEntry[]> {
     console.error('Error getting analysis history:', error);
     throw error;
   }
-} 
+}

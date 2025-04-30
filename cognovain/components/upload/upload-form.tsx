@@ -111,7 +111,12 @@ export default function UploadForm() {
                 });
                 
                 if (result.success) {
-                    showNotification('Analysis saved to your history', 'success');
+                    if (result.warning) {
+                        // Show warning notification if there was an issue saving to history
+                        showNotification(result.warning, 'info');
+                    } else {
+                        showNotification('Analysis saved to your history', 'success');
+                    }
                 }
             } catch (historyError) {
                 console.error('Error saving analysis to history:', historyError);
