@@ -48,7 +48,7 @@ export default function RootLayout({
       <body className={`${fontSans.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <NotificationProvider>
-            <div className="relative flex min-h-screen flex-col overflow-hidden w-full">
+            <div className="relative flex min-h-screen flex-col">
               {/* Brain decorations - using Next.js Image for better performance */}
               <div aria-hidden="true">
                 <Image src="/blue.png" alt="" width={100} height={100} className="brain-decoration blue-brain-1" priority />

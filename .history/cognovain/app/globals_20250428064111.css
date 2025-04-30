@@ -97,12 +97,6 @@
     border-color: var(--color-gray-200, currentColor);
   }
 
-  html, body {
-    overflow-x: hidden;
-    width: 100%;
-    position: relative;
-  }
-
   * {
     @apply border-border;
   }

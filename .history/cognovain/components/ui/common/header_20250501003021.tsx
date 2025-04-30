@@ -52,18 +52,18 @@ export default function Header() {
 
     return ( 
     <header className={cn(
-        "sticky top-0 z-50 w-full border-b backdrop-blur transition-all duration-200 overflow-hidden",
+        "sticky top-0 z-50 w-full border-b backdrop-blur transition-all duration-200",
         scrolled 
             ? "border-border/40 bg-background/95 supports-[backdrop-filter]:bg-background/80 shadow-sm" 
             : "border-transparent bg-background/50 supports-[backdrop-filter]:bg-background/40"
     )}>
-      <nav className="container flex h-16 items-center justify-between px-4 max-w-full">
+      <nav className="container flex h-16 items-center justify-between">
         {/* Logo and Name */}
         <NavLink href="/" className="flex items-center gap-2 transition-all duration-200 hover:opacity-80">  
           <div className="flex items-center justify-center rounded-md bg-gradient-to-br from-rose-500 to-rose-700 p-1.5 shadow-sm">
             <Brain className="h-5 w-5 text-white" />
           </div>
-          <span className="font-extrabold text-xl bg-gradient-to-r from-rose-600 to-rose-500 bg-clip-text text-transparent hidden sm:inline">Cognovain</span>
+          <span className="font-extrabold text-xl bg-gradient-to-r from-rose-600 to-rose-500 bg-clip-text text-transparent">Cognovain</span>
         </NavLink>
 
         {/* Navigation Links - Desktop */}
@@ -145,7 +145,7 @@ export default function Header() {
 
       {/* Mobile menu, show/hide based on menu state */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed top-16 inset-x-0 bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 shadow-lg z-50 max-h-[calc(100vh-4rem)] overflow-y-auto overflow-x-hidden w-full">
+        <div className="md:hidden fixed top-16 inset-x-0 bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 shadow-lg z-50 max-h-[calc(100vh-4rem)] overflow-y-auto">
           <div className="space-y-1 px-4 pb-4 pt-2">
             <NavLink
               href="/#how-it-works"
