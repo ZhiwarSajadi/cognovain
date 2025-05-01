@@ -96,18 +96,18 @@ export default function Header() {
             <div className="flex items-center gap-1 sm:gap-4">
               <NavLink 
                 href="/submit" 
-                className="text-sm font-medium text-rose-600 hover:text-rose-500 flex items-center gap-1.5 hidden sm:flex"
+                className="text-sm font-medium text-rose-600 hover:text-rose-500 flex items-center gap-1.5"
               >
                 <span>Submit Entry</span>
                 <ExternalLink className="h-3.5 w-3.5" />
               </NavLink>
               <NavLink 
                 href="/dashboard" 
-                className="text-sm font-medium text-rose-600 hover:text-rose-500 hidden sm:inline-block"
+                className="text-sm font-medium text-rose-600 hover:text-rose-500"
               >
                 Dashboard
               </NavLink>
-              <span className="hidden sm:inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-rose-100 text-rose-700 hover:bg-rose-200">
+              <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-rose-100 text-rose-700 hover:bg-rose-200">
                 Pro
               </span>
               <UserButton afterSignOutUrl="/" />
