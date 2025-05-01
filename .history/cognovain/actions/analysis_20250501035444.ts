@@ -43,10 +43,8 @@ export async function saveAnalysisToHistory(analysis: AnalysisEntry): Promise<Sa
       throw new Error('Database configuration error');
     }
     
-    // Create a Supabase admin client for insert operation
-    // We use the admin client here because we need to ensure the insert succeeds
-    // regardless of RLS policies (in case they're misconfigured)
-    const supabase = createServerSupabaseAdminClient();
+    // Create a Supabase client
+    const supabase = createServerSupabaseClient();
     
     // Validate that the table exists by checking the schema
     try {
@@ -95,8 +93,7 @@ export async function getAnalysisHistory(): Promise<HistoryEntry[]> {
       throw new Error('User not authenticated');
     }
     
-    // Create a regular Supabase client that respects RLS policies
-    // This is appropriate for read operations where we want RLS to enforce access control
+    // Create a Supabase client
     const supabase = createServerSupabaseClient();
     
     // Debug logging
