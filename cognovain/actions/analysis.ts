@@ -95,9 +95,9 @@ export async function getAnalysisHistory(): Promise<HistoryEntry[]> {
       throw new Error('User not authenticated');
     }
     
-    // Create a regular Supabase client that respects RLS policies
-    // This is appropriate for read operations where we want RLS to enforce access control
-    const supabase = createServerSupabaseClient();
+    // Use the admin client to bypass RLS policies since we're using Clerk for auth
+    // and the RLS policy might be expecting auth.uid() from Supabase Auth
+    const supabase = createServerSupabaseAdminClient();
     
     // Debug logging
     console.log('Supabase client created, attempting to fetch data for user:', user.id);
