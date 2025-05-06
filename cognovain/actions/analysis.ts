@@ -39,7 +39,10 @@ export async function saveAnalysisToHistory(analysis: AnalysisEntry): Promise<Sa
     
     // Validate environment variables before creating client
     if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      console.error('Missing Supabase environment variables');
+      // Only log in development environment
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Missing Supabase environment variables');
+      }
       throw new Error('Database configuration error');
     }
     
@@ -64,20 +67,32 @@ export async function saveAnalysisToHistory(analysis: AnalysisEntry): Promise<Sa
         .single();
       
       if (error) {
+        // Only log in development environment
+      if (process.env.NODE_ENV !== 'production') {
         console.error('Supabase error:', error);
+      }
         throw new Error(`Failed to save analysis: ${error.message}`);
       }
       
-      console.log('Analysis saved to Supabase for user:', user.id);
+      // Only log in development environment
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Analysis saved to Supabase for user:', user.id);
+      }
       
       return { success: true, data };
     } catch (dbError) {
-      console.error('Database operation error:', dbError);
+      // Only log in development environment
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Database operation error:', dbError);
+      }
       // Return success true but with a warning to prevent blocking the user experience
       return { success: true, warning: 'Analysis could not be saved to history', data: null };
     }
   } catch (error) {
-    console.error('Error saving analysis to history:', error);
+    // Only log in development environment
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Error saving analysis to history:', error);
+    }
     // Return success true to prevent blocking the user experience
     return { success: true, warning: 'Analysis could not be saved to history', data: null };
   }
@@ -99,9 +114,11 @@ export async function getAnalysisHistory(): Promise<HistoryEntry[]> {
     // and the RLS policy might be expecting auth.uid() from Supabase Auth
     const supabase = createServerSupabaseAdminClient();
     
-    // Debug logging
-    console.log('Supabase client created, attempting to fetch data for user:', user.id);
-    console.log('Using table:', ANALYSIS_HISTORY_TABLE);
+    // Debug logging only in development environment
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Supabase client created, attempting to fetch data for user:', user.id);
+      console.log('Using table:', ANALYSIS_HISTORY_TABLE);
+    }
     
     try {
       // Query the database for analyses by this user
@@ -112,11 +129,17 @@ export async function getAnalysisHistory(): Promise<HistoryEntry[]> {
         .order('created_at', { ascending: false });
       
       if (error) {
-        console.error('Detailed Supabase error:', JSON.stringify(error, null, 2));
+        // Only log in development environment
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('Detailed Supabase error:', JSON.stringify(error, null, 2));
+        }
         throw new Error(`Failed to fetch analysis history: ${error.message || 'Unknown error'}`);
       }
       
-      console.log('Successfully fetched data, count:', data?.length || 0);
+      // Only log in development environment
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Successfully fetched data, count:', data?.length || 0);
+      }
       
       // Convert database format to application format with explicit typing
       const entries: HistoryEntry[] = data.map(entry => ({
@@ -128,11 +151,17 @@ export async function getAnalysisHistory(): Promise<HistoryEntry[]> {
       
       return entries;
     } catch (queryError) {
-      console.error('Query execution error:', queryError);
+      // Only log in development environment
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Query execution error:', queryError);
+      }
       throw queryError;
     }
   } catch (error) {
-    console.error('Error getting analysis history:', error);
+    // Only log in development environment
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Error getting analysis history:', error);
+    }
     throw error;
   }
 }

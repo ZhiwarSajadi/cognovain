@@ -100,9 +100,18 @@ ${entry.analysis}`);
       return (
         <div 
           key={index} 
-          className="mb-4 text-gray-700 dark:text-gray-300 transition-all duration-300"
-          dangerouslySetInnerHTML={{ __html: highlightedText }}
-        />
+          className="mb-4 text-gray-700 dark:text-gray-300 text-sm sm:text-base transition-opacity duration-300 ease-in break-words whitespace-pre-wrap overflow-wrap break-word"
+        >
+          {/* Replace dangerouslySetInnerHTML with safer rendering */}
+          {highlightedText.split(/<span class="font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900\/30 px-1 rounded shadow-sm">|<\/span>/).map((part, i) => {
+            // Every odd index is a highlighted term
+            return i % 2 === 0 ? (
+              <span key={i}>{part}</span>
+            ) : (
+              <span key={i} className="font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-1 rounded shadow-sm">{part}</span>
+            );
+          })}
+        </div>
       );
     });
   };

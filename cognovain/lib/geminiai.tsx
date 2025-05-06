@@ -27,14 +27,11 @@ export const generateAnalysisFromGemini = async (userText: string) => {
     // Parse the response
     const data = await response.json();
     
-    // Log the response to the terminal
-    console.log('Gemini AI Analysis Result:');
-    console.log(data.analysis);
+    // Return the analysis without logging to console in production code
     
     return data.analysis;
   } catch (error: any) {
-    // Log errors
-    console.error('Gemini API Error:', error);
+    // Handle errors without logging to console in production code
     throw error;
   }
 };

@@ -81,7 +81,7 @@ export default function UploadForm() {
         setError(null);
         
         try {
-            console.log('Analyzing statement:', statement);
+            // Remove console.log for production code
             
             // Track analytics event
             trackEvent('analyze_statement', 'user_action', `Statement Length: ${statement.length}`, retryStatus.count);
@@ -335,21 +335,21 @@ export default function UploadForm() {
                )}
                  
                <div className="prose max-w-none dark:prose-invert w-full overflow-hidden bg-gray-100 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-inner transition-all duration-300">
-                 {analysisResult.split('\n').map((paragraph, index) => {
-                   // Enhanced highlighting for cognitive biases with more patterns
-                   const highlightedText = paragraph.replace(
-                      /(cognitive bias|logical fallacy|thinking error|cognitive distortion|black and white thinking|catastrophizing|overgeneralization|personalization|emotional reasoning|mental filter|jumping to conclusions|should statements|labeling|magnification|minimization|fortune telling|mind reading|disqualifying the positive|all-or-nothing thinking|filtering|polarized thinking|heaven's reward fallacy|control fallacy|fallacy of fairness|blaming|always being right|fallacy of change|global labeling|mislabeling|fallacy of attachment|discounting the positive|dichotomous thinking|arbitrary inference|selective abstraction|over-generalization|maximization|minimization|confirmation bias|hindsight bias|self-serving bias|attribution bias|framing effect|anchoring bias|availability heuristic|halo effect|fundamental attribution error|optimism bias|pessimism bias|dunning-kruger effect|actor-observer bias|sunk cost fallacy|false consensus effect|bandwagon effect|self-fulfilling prophecy|negativity bias|positive bias|recency bias|just world hypothesis|spotlight effect|gambler's fallacy|illusory correlation|projection bias|normalcy bias|reactance|regret aversion|status quo bias|outcome bias|moral luck|appeal to authority|appeal to emotion|appeal to ignorance|appeal to nature|appeal to novelty|appeal to tradition|appeal to hypocrisy|straw man fallacy|circular reasoning|ad hominem|slippery slope|false dilemma|hasty generalization|appeal to probability|appeal to force|bandwagon fallacy|no true scotsman|loaded question|ambiguity|perfect solution fallacy|thought-action fusion|emotional reasoning|compare and despair|cross-examination|excessive apologizing|overvaluing social approval|perfectionism|dismissal of positive|rejecting compliments|ignoring achievements|diminishing success|downplaying positives|disregarding strengths|refusal to accept praise|invalidating positive feedback|overlooking positive aspects|trivializing success|underestimating capabilities|refusing to acknowledge progress|denial of improvement|rejection of positive evidence|devaluing personal qualities|negating positive traits|discrediting positive experiences|diminishing personal worth|invalidating positive results|undermining accomplishments|discarding positive feedback|rejecting evidence of success|dismissing positive qualities|minimizing achievements|refusing recognition)/gi,
-                      '<span class="font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950 px-1 rounded shadow-sm">$1</span>'
-                    );
-                    
-                    return (
-                      <div 
-                        key={index} 
-                        className="mb-4 text-gray-700 dark:text-gray-300 text-sm sm:text-base transition-opacity duration-300 ease-in break-words whitespace-pre-wrap overflow-wrap break-word"
-                        dangerouslySetInnerHTML={{ __html: highlightedText }}
-                      />
-                    );
-                  })}
+                    {analysisResult.split('\n').map((line, index) => {
+                        // Highlight cognitive bias terms in the line
+                        const highlightedText = line.replace(
+                            /(cognitive bias|logical fallacy|thinking error|cognitive distortion|black and white thinking|catastrophizing|overgeneralization|personalization|emotional reasoning|mental filter|jumping to conclusions|should statements|labeling|magnification|minimization|fortune telling|mind reading|disqualifying the positive|all-or-nothing thinking|filtering|polarized thinking|heaven's reward fallacy|control fallacy|fallacy of fairness|blaming|always being right|fallacy of change|global labeling|mislabeling|fallacy of attachment|discounting the positive|dichotomous thinking|arbitrary inference|selective abstraction|over-generalization|maximization|minimization|confirmation bias|hindsight bias|self-serving bias|attribution bias|framing effect|anchoring bias|availability heuristic|halo effect|fundamental attribution error|optimism bias|pessimism bias|dunning-kruger effect|actor-observer bias|sunk cost fallacy|false consensus effect|bandwagon effect|self-fulfilling prophecy|negativity bias|positive bias|recency bias|just world hypothesis|spotlight effect|gambler's fallacy|illusory correlation|projection bias|normalcy bias|reactance|regret aversion|status quo bias|outcome bias|moral luck|appeal to authority|appeal to emotion|appeal to ignorance|appeal to nature|appeal to novelty|appeal to tradition|appeal to hypocrisy|straw man fallacy|circular reasoning|ad hominem|slippery slope|false dilemma|hasty generalization|appeal to probability|appeal to force|bandwagon fallacy|no true scotsman|loaded question|ambiguity|perfect solution fallacy|thought-action fusion|emotional reasoning|compare and despair|cross-examination|excessive apologizing|overvaluing social approval|perfectionism|dismissal of positive|rejecting compliments|ignoring achievements|diminishing success|downplaying positives|disregarding strengths|refusal to accept praise|invalidating positive feedback|overlooking positive aspects|trivializing success|underestimating capabilities|refusing to acknowledge progress|denial of improvement|rejection of positive evidence|devaluing personal qualities|negating positive traits|discrediting positive experiences|diminishing personal worth|invalidating positive results|undermining accomplishments|discarding positive feedback|rejecting evidence of success|dismissing positive qualities|minimizing achievements|refusing recognition|lack of context|lack of perspective)/gi,
+                            '<span class="font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-1 rounded shadow-sm">$1</span>'
+                        );
+                        
+                        return (
+                            <p 
+                                key={index} 
+                                className={line.includes('•') ? 'mb-2' : 'font-semibold mb-3'}
+                                dangerouslySetInnerHTML={{ __html: highlightedText }}
+                            />
+                        );
+                    })}
                 </div>
                 
                 {/* Action footer */}

@@ -76,8 +76,8 @@ export const createServerSupabaseClient = () => {
     return createServerSupabaseAdminClient();
   }
   
-  // Debug logging for environment variables
-  if (process.env.NODE_ENV === 'development') {
+  // Only log in development environment
+  if (process.env.NODE_ENV !== 'production') {
     console.log('SUPABASE_URL:', supabaseUrl);
     console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY available:', !!supabaseAnonKey);
   }

@@ -88,7 +88,10 @@ export default ApiErrorHandler;
 
 // Utility function to handle API errors in try/catch blocks
 export const handleApiError = (error: any, showNotification: Function) => {
-  console.error('API Error:', error);
+  // Only log in development environment
+  if (process.env.NODE_ENV !== 'production') {
+    console.error('API Error:', error);
+  }
   
   let errorMessage = 'An unexpected error occurred';
   
